@@ -4,9 +4,9 @@ import readInput from '../shared/readInput'
 run()
 
 function run() {
-  const masses: number[] = readInput(resolve(__dirname, 'input.txt')).map(n =>
-    parseInt(n)
-  )
+  const masses: number[] = readInput(resolve(__dirname, 'input.txt'))
+    .split('\n')
+    .map(n => parseInt(n))
 
   const total = sum(...masses.map(additionalFuelRequirement))
   console.log('Total', total)
