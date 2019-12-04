@@ -10,16 +10,25 @@ enum Opcode {
 run()
 
 function run() {
+  const targetValue = 19690720
   const arr = readInput(resolve(__dirname, 'input.txt'))
     .split(',')
     .map(n => parseInt(n))
 
-  arr[1] = 12
-  arr[2] = 2
+  for (let noun = 0; noun <= 99; noun++) {
+    for (let verb = 0; verb <= 99; verb++) {
+      arr[1] = noun
+      arr[2] = verb
 
-  runIntcode(arr)
+      const input = [...arr]
+      runIntcode(input)
 
-  console.log(arr[0])
+      if (input[0] === targetValue) {
+        console.log(`100 * ${noun} + ${verb} = ${100 * noun + verb}`)
+        return
+      }
+    }
+  }
 }
 
 export function runIntcode(arr: number[]): void {
