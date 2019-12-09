@@ -1,5 +1,6 @@
 import * as path from 'path'
 
+import range from '../shared/range'
 import readInput from '../shared/readInput'
 
 // Read in the two wires, map them to a list of instructions
@@ -19,13 +20,6 @@ const yMultiplier: { [key: string]: number } = {
   R: 0,
   U: -1,
   D: 1
-}
-
-/**
- * Generates a range from start to end (inclusive).
- */
-function range(start: number, end: number) {
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 }
 
 type Vector2 = {
