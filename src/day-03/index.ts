@@ -33,14 +33,17 @@ type Vector2 = {
   y: number
 }
 
+type Point = Vector2 & { length: number }
+
 /**
  * Returns a list of all points covered by the given wire.
  */
-function allPoints(wire: string[]): Vector2[] {
+function allPoints(wire: string[]): Point[] {
   let x = 0
   let y = 0
+  let length = 0
 
-  return wire.reduce((acc: Vector2[], cur) => {
+  return wire.reduce((acc: Point[], cur) => {
     const dir = cur[0]
     const dist = parseInt(cur.slice(1))
 
@@ -49,8 +52,9 @@ function allPoints(wire: string[]): Vector2[] {
       ...range(1, dist).map(() => {
         x += xMultiplier[dir]
         y += yMultiplier[dir]
+        length += 1
 
-        return { x, y }
+        return { x, y, length }
       })
     ]
   }, [])
@@ -62,12 +66,29 @@ const pointsB = allPoints(wireB)
 
 // Calculate the points at which the wires cross.
 // NOTE: very slow
-const crossingPoints = pointsA.filter(pointA =>
-  pointsB.some(pointB => pointB.x === pointA.x && pointB.y === pointA.y)
-)
+// Part 1 implementation
+// const crossingPoints = pointsA.filter(pointA =>
+//   pointsB.some(pointB => pointB.x === pointA.x && pointB.y === pointA.y)
+// )
+
+// Part 1 implementation
+// const minDistance = Math.min(
+//   ...crossingPoints.map(({ x, y }) => Math.abs(x) + Math.abs(y))
+// )
+
+const crossingPoints = pointsA.reduce((acc: { a: Point; b: Point }[], cur) => {
+  const matchingPoint = pointsB.find(
+    pointB => pointB.x === cur.x && pointB.y === cur.y
+  )
+  if (!matchingPoint) {
+    return acc
+  }
+
+  return [...acc, { a: cur, b: matchingPoint }]
+}, [])
 
 const minDistance = Math.min(
-  ...crossingPoints.map(({ x, y }) => Math.abs(x) + Math.abs(y))
+  ...crossingPoints.map(({ a, b }) => a.length + b.length)
 )
 
 console.log(minDistance)
