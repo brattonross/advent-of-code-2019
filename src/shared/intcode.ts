@@ -1,30 +1,3 @@
-export enum Opcode {
-  // Adds together the first two parameters and stores them at
-  // the location specified by the third parameter.
-  ADD = 1,
-
-  // Multiplies together the first two parameters and stores them
-  // at the location specified by the third parameter.
-  MULTIPLY = 2,
-
-  // Takes an input and writes it to the location specified by the parameter.
-  WRITE = 3,
-
-  // Outputs the value of the parameter.
-  OUTPUT = 4,
-
-  // Immediately halts execution of the program.
-  HALT = 99
-}
-
-export enum ParameterMode {
-  // Parameter is counted as the position of the value
-  Position,
-
-  // Parameter itself is counted as the value
-  Immediate
-}
-
 export function runIntcode(code: number[], input: number = 0): number[] {
   // Start the program at index 0
   let index = 0
@@ -37,10 +10,15 @@ export function runIntcode(code: number[], input: number = 0): number[] {
     switch (opcode) {
       case Opcode.ADD:
       case Opcode.MULTIPLY:
+      case Opcode.LESS_THAN:
+      case Opcode.EQUALS:
         return code.slice(startIndex, startIndex + 3)
       case Opcode.OUTPUT:
       case Opcode.WRITE:
         return code.slice(startIndex, startIndex + 1)
+      case Opcode.JUMP_IF_TRUE:
+      case Opcode.JUMP_IF_FALSE:
+        return code.slice(startIndex, startIndex + 2)
       default:
         return []
     }
@@ -84,12 +62,101 @@ export function runIntcode(code: number[], input: number = 0): number[] {
         index += 2
         break
       }
+      case Opcode.JUMP_IF_TRUE: {
+        const [paramA, paramB] = parameters
+        const numA = getParam(paramA, instruction.paramMode1)
+        const numB = getParam(paramB, instruction.paramMode2)
+        if (numA !== 0) {
+          index = numB
+        } else {
+          index += 3
+        }
+        break
+      }
+      case Opcode.JUMP_IF_FALSE: {
+        const [paramA, paramB] = parameters
+        const numA = getParam(paramA, instruction.paramMode1)
+        const numB = getParam(paramB, instruction.paramMode2)
+        if (numA === 0) {
+          index = numB
+        } else {
+          index += 3
+        }
+        break
+      }
+      case Opcode.LESS_THAN: {
+        const [paramA, paramB, outputIndex] = parameters
+        const numA = getParam(paramA, instruction.paramMode1)
+        const numB = getParam(paramB, instruction.paramMode2)
+        if (numA < numB) {
+          code[outputIndex] = 1
+        } else {
+          code[outputIndex] = 0
+        }
+        index += 4
+        break
+      }
+      case Opcode.EQUALS: {
+        const [paramA, paramB, outputIndex] = parameters
+        const numA = getParam(paramA, instruction.paramMode1)
+        const numB = getParam(paramB, instruction.paramMode2)
+        if (numA === numB) {
+          code[outputIndex] = 1
+        } else {
+          code[outputIndex] = 0
+        }
+        index += 4
+        break
+      }
       case Opcode.HALT:
         return outputs
     }
   }
 
   return outputs
+}
+
+export enum Opcode {
+  // Adds together the first two parameters and stores them at
+  // the location specified by the third parameter.
+  ADD = 1,
+
+  // Multiplies together the first two parameters and stores them
+  // at the location specified by the third parameter.
+  MULTIPLY = 2,
+
+  // Takes an input and writes it to the location specified by the parameter.
+  WRITE = 3,
+
+  // Outputs the value of the parameter.
+  OUTPUT = 4,
+
+  // If the first parameter is `non-zero`, it sets the instruction pointer
+  // to the value from the second parameter. Otherwise, it does nothing.
+  JUMP_IF_TRUE = 5,
+
+  // If the first parameter is zero, it sets the instruction pointer to
+  // the value from the second parameter. Otherwise, it does nothing.
+  JUMP_IF_FALSE = 6,
+
+  // If the first parameter is less then the second, it stores 1 in the position
+  // given by the third parameter. Otherwise it stores 0.
+  LESS_THAN = 7,
+
+  // If the first parameter is equal to the second parameter, it stores
+  // 1 in the position given by the third parameter. Otherwise it stores 0.
+  EQUALS = 8,
+
+  // Immediately halts execution of the program.
+  HALT = 99
+}
+
+export enum ParameterMode {
+  // Parameter is counted as the position of the value
+  Position,
+
+  // Parameter itself is counted as the value
+  Immediate
 }
 
 export type Instruction = {

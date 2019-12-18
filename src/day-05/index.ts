@@ -5,7 +5,12 @@ import { runIntcode } from '../shared/intcode'
 const code = readInput(path.resolve(__dirname, './input.txt'))
   .split(',')
   .map(n => parseInt(n))
-const input = 1
+
+// part 1
+// const input = 1
+
+// part 2
+const input = 5
 
 const output = runIntcode(code, input)
 console.log(output)
