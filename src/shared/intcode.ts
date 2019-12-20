@@ -1,6 +1,7 @@
-export function runIntcode(code: number[], input: number = 0): number[] {
+export function runIntcode(code: number[], inputs: number[] = []): number[] {
   // Start the program at index 0
   let index = 0
+  let inputIndex = 0
   let outputs: number[] = []
 
   /** Returns a list of parameters from the code array based on the opcode. */
@@ -52,7 +53,7 @@ export function runIntcode(code: number[], input: number = 0): number[] {
       }
       case Opcode.WRITE: {
         const [outputIndex] = parameters
-        code[outputIndex] = input
+        code[outputIndex] = inputs[inputIndex++]
         index += 2
         break
       }

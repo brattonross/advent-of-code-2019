@@ -247,7 +247,7 @@ describe('runIntcode', () => {
     ]
 
     for (const tc of cases) {
-      const [actual] = runIntcode(tc.code, tc.input)
+      const [actual] = runIntcode(tc.code, [tc.input])
       expect(actual).toEqual(tc.expected)
     }
   })

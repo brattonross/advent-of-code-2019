@@ -10,7 +10,7 @@ const code = readInput(path.resolve(__dirname, './input.txt'))
 // const input = 1
 
 // part 2
-const input = 5
+const input = [5]
 
 const output = runIntcode(code, input)
 console.log(output)
