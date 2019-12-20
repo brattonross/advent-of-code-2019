@@ -2,13 +2,14 @@ import * as path from 'path'
 import { runIntcode } from '../shared/intcode'
 import permutator from '../shared/permutator'
 import readInput from '../shared/readInput'
+import range from '../shared/range'
 
 function runAmplifier(phaseSetting: number, input: number, code: number[]) {
   const [value] = runIntcode(code, [phaseSetting, input])
   return value
 }
 
-export function maxThruster(
+export function thruster(
   phaseSettings: number[],
   input: number,
   code: number[]
@@ -22,10 +23,11 @@ export function maxThruster(
 const code = readInput(path.resolve(__dirname, './input.txt'))
   .split(',')
   .map(n => parseInt(n))
-const possibleSettings = permutator<number>([0, 1, 2, 3, 4])
+
+const possibleSettings = permutator<number>(range(0, 4))
 
 const max = Math.max(
-  ...possibleSettings.map(settings => maxThruster(settings, 0, code))
+  ...possibleSettings.map(settings => thruster(settings, 0, code))
 )
 
 console.log(max)

@@ -1,6 +1,6 @@
-import { maxThruster } from '..'
+import { thruster } from '..'
 
-test('maxThruster', () => {
+test('thruster', () => {
   const cases = [
     {
       expected: 43210,
@@ -81,7 +81,7 @@ test('maxThruster', () => {
   ]
 
   for (const tc of cases) {
-    const actual = maxThruster(tc.phaseSettings, 0, tc.code)
+    const actual = thruster(tc.phaseSettings, 0, tc.code)
 
     expect(actual).toEqual(tc.expected)
   }
