@@ -49,8 +49,65 @@ export function totalOrbits(list: Node<string>[]): number {
   }, 0)
 }
 
+/**
+ * Returns the object at which the two nodes cross orbital paths, if any.
+ */
+export function crossAt(
+  nodeA: Node<string>,
+  nodeB: Node<string>
+): Node<string> | undefined {
+  let currentA = nodeA
+  let currentB = nodeB
+
+  while (currentA.next) {
+    while (currentB.next) {
+      // If the two nodes match then we found a crossing point
+      if (currentB.value === currentA.value) {
+        return currentA
+      }
+      currentB = currentB.next
+    }
+
+    // Reset nodeB
+    currentB = nodeB
+    currentA = currentA.next
+  }
+
+  return undefined
+}
+
+/**
+ * Returns the number of orbital transfers required to get from one node to another.
+ * The 'to' node must be in the orbital path of the 'from' node.
+ */
+export function transfersBetween(from: Node<string>, to: Node<string>): number {
+  let total = 0
+  let current = from
+  while (current.next) {
+    if (current.value === to.value) {
+      return total
+    }
+    total += 1
+    current = current.next
+  }
+  return total
+}
+
 const orbits = toAdjacencyList(
   readInput(path.resolve(__dirname, './input.txt')).split('\n')
 )
 
-console.log('Total Orbits: ', totalOrbits(orbits))
+const you = orbits.find(node => node.value === 'YOU')!
+const san = orbits.find(node => node.value === 'SAN')!
+
+const crossingPoint = crossAt(you, san)!
+
+// Total transfers will be the distance between YOU and SAN - 2.
+// This is because we only want to count the distance between the
+// objects that YOU and SAN are orbiting (-2).
+const totalTransfers =
+  transfersBetween(you, crossingPoint) +
+  transfersBetween(san, crossingPoint) -
+  2
+
+console.log('Total transfers: ', totalTransfers)

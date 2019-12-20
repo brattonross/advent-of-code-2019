@@ -1,4 +1,10 @@
-import { Node, toAdjacencyList, totalOrbits } from '..'
+import {
+  Node,
+  toAdjacencyList,
+  totalOrbits,
+  crossAt,
+  transfersBetween
+} from '..'
 
 const relationships = [
   'COM)B',
@@ -11,7 +17,9 @@ const relationships = [
   'D)I',
   'E)J',
   'J)K',
-  'K)L'
+  'K)L',
+  'K)YOU',
+  'I)SAN'
 ]
 
 const COM = { value: 'COM' }
@@ -26,8 +34,10 @@ const I = { value: 'I', next: D }
 const J = { value: 'J', next: E }
 const K = { value: 'K', next: J }
 const L = { value: 'L', next: K }
+const YOU = { value: 'YOU', next: K }
+const SAN = { value: 'SAN', next: I }
 
-const AdjacencyList = [COM, B, C, D, E, F, G, H, I, J, K, L]
+const AdjacencyList = [COM, B, C, D, E, F, G, H, I, J, K, L, YOU, SAN]
 
 test('toAdjacencyList', () => {
   const expected: Node<string>[] = AdjacencyList
@@ -38,9 +48,30 @@ test('toAdjacencyList', () => {
 })
 
 test('totalOrbits', () => {
-  const expected = 42
+  const expected = 54
 
   const actual = totalOrbits(AdjacencyList)
 
   expect(actual).toEqual(expected)
+})
+
+test('crossAt', () => {
+  const expected = D
+
+  const actual = crossAt(YOU, SAN)
+
+  expect(actual).toEqual(expected)
+})
+
+test('transfersBetween', () => {
+  const cases = [
+    { expected: 4, from: YOU, to: D },
+    { expected: 2, from: SAN, to: D }
+  ]
+
+  for (const tc of cases) {
+    const actual = transfersBetween(tc.from, tc.to)
+
+    expect(actual).toEqual(tc.expected)
+  }
 })
