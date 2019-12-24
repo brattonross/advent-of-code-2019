@@ -1,14 +1,33 @@
 import * as path from 'path'
 import readInput from '../shared/readInput'
 
+// Constants
 const HEIGHT = 6
 const WIDTH = 25
+
+enum Color {
+  BLACK = 0,
+  WHITE = 1,
+  TRANSPARENT = 2
+}
 
 export class SpaceImage {
   private pixels: number[]
 
   constructor(pixels: number[], private width: number, private height: number) {
     this.pixels = [...pixels]
+  }
+
+  /** Returns the decoded image. */
+  get image(): number[] {
+    return this.layers.reduce((image, layer) => {
+      for (let i = 0; i < layer.length; i++) {
+        if (layer[i] !== Color.TRANSPARENT && image[i] === undefined) {
+          image[i] = layer[i]
+        }
+      }
+      return image
+    }, [])
   }
 
   layer(n: number): number[] {
@@ -59,3 +78,15 @@ function part1() {
 
 const ans1 = part1()
 console.log('Part 1:', ans1)
+
+function part2() {
+  const img = new SpaceImage(pixels, WIDTH, HEIGHT)
+
+  return img.image
+}
+
+const ans2 = part2()
+console.log('Part 2:')
+for (let i = 0; i < WIDTH * HEIGHT; i += WIDTH) {
+  console.log(ans2.slice(i, i + WIDTH))
+}

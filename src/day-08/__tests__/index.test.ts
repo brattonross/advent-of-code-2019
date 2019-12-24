@@ -15,6 +15,16 @@ describe('SpaceImage', () => {
       [7, 8, 9, 0, 1, 2]
     ])
   })
+
+  it('decodes image', () => {
+    const pixels = [0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 0, 0, 0, 0]
+    const expected = [0, 1, 1, 0]
+
+    const img = new SpaceImage(pixels, 2, 2)
+    const actual = img.image
+
+    expect(actual).toEqual(expected)
+  })
 })
 
 test('count', () => {
