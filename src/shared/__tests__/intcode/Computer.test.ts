@@ -221,3 +221,11 @@ test('passes day 05 tests', () => {
     expect(actual).toEqual(tc.expected)
   }
 })
+
+test('run finishes after an output', () => {
+  const computer = new Computer([4, 0, 99], [])
+
+  const actual = computer.run()
+  expect(actual).toEqual([4])
+  expect(computer.halted).toEqual(false)
+})

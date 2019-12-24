@@ -37,10 +37,10 @@ type Operations = {
 
 export class Computer {
   private memory: number[]
-  private inputs: number[]
-  private outputs: number[] = []
+  public inputs: number[]
+  public outputs: number[] = []
   private pointer = 0
-  private halted = false
+  public halted = false
   private operations: Operations = {
     [Opcode.ADD]: Operation.from({
       parameters: 3,
