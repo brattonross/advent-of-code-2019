@@ -19,3 +19,17 @@ function part1() {
 
 const ans1 = part1()
 console.log(ans1)
+
+function part2() {
+  const computer = new Computer(code, 2)
+
+  let output: number[] = []
+  while (!computer.halted) {
+    output = computer.run()
+  }
+
+  return output
+}
+
+const ans2 = part2()
+console.log(ans2)
