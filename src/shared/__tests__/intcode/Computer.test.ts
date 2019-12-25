@@ -229,3 +229,51 @@ test('run finishes after an output', () => {
   expect(actual).toEqual([4])
   expect(computer.halted).toEqual(false)
 })
+
+test('passes day 09 test 1', () => {
+  const code = [
+    109,
+    1,
+    204,
+    -1,
+    1001,
+    100,
+    1,
+    100,
+    1008,
+    100,
+    16,
+    101,
+    1006,
+    101,
+    0,
+    99
+  ]
+  const computer = new Computer(code, [])
+
+  let actual: number[] = []
+  while (!computer.halted) {
+    actual = computer.run()
+  }
+
+  expect(actual).toEqual(code)
+})
+
+test('passes day 09 test 2', () => {
+  const code = [1102, 34915192, 34915192, 7, 4, 7, 99, 0]
+  const computer = new Computer(code, [])
+
+  const [actual] = computer.run()
+
+  expect(actual).toBeTruthy()
+  expect(actual.toString().split('').length).toEqual(16)
+})
+
+test('passes day 09 test 3', () => {
+  const code = [104, 1125899906842624, 99]
+  const computer = new Computer(code, [])
+
+  const [actual] = computer.run()
+
+  expect(actual).toEqual(1125899906842624)
+})

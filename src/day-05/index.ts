@@ -1,6 +1,6 @@
 import * as path from 'path'
 import readInput from '../shared/readInput'
-import { runIntcode } from '../shared/intcode'
+import { Computer } from '../shared/intcode'
 
 const code = readInput(path.resolve(__dirname, './input.txt'))
   .split(',')
@@ -12,5 +12,5 @@ const code = readInput(path.resolve(__dirname, './input.txt'))
 // part 2
 const input = [5]
 
-const output = runIntcode(code, input)
+const output = new Computer(code, input).run()
 console.log(output)

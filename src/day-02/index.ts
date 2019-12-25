@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 
 import readInput from '../shared/readInput'
-import { runIntcode } from '../shared/intcode'
+import { Computer } from '../shared/intcode'
 
 run()
 
@@ -16,8 +16,10 @@ function run(): void {
       arr[1] = noun
       arr[2] = verb
 
-      const input = [...arr]
-      runIntcode(input)
+      let input = [...arr]
+      const computer = new Computer(input, [])
+      computer.run()
+      input = computer.dump()
 
       if (input[0] === targetValue) {
         console.log(`100 * ${noun} + ${verb} = ${100 * noun + verb}`)

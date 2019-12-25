@@ -29,6 +29,9 @@ export enum Opcode {
   // 1 in the position given by the third parameter. Otherwise it stores 0.
   EQUALS = 8,
 
+  // Adjusts the relative base by the value of its only parameter.
+  ADJUST_RELATIVE = 9,
+
   // Immediately halts execution of the program.
   HALT = 99
 }

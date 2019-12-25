@@ -40,6 +40,7 @@ export class Computer {
   public inputs: number[]
   public outputs: number[] = []
   private pointer = 0
+  private relativeBase = 0
   public halted = false
   private operations: Operations = {
     [Opcode.ADD]: Operation.from({
@@ -123,6 +124,13 @@ export class Computer {
       writes: true
     }),
 
+    [Opcode.ADJUST_RELATIVE]: Operation.from({
+      parameters: 1,
+      execute: a => {
+        this.relativeBase += a
+      }
+    }),
+
     [Opcode.HALT]: Operation.from({
       parameters: 0,
       execute: () => {
@@ -150,11 +158,18 @@ export class Computer {
 
         // If the operation does not write, or it does and we aren't on the
         // last parameter, we should check if it is in Position Mode.
-        if (
-          (!operation.writes || index < instruction.modes.length - 1) &&
-          mode === ParameterMode.Position
+        if (!operation.writes || index < instruction.modes.length - 1) {
+          if (mode === ParameterMode.Position) {
+            parameter = this.memory[parameter]
+          } else if (mode === ParameterMode.Relative) {
+            parameter = this.memory[this.relativeBase + parameter]
+          }
+        } else if (
+          operation.writes &&
+          index === instruction.modes.length - 1 &&
+          mode === ParameterMode.Relative
         ) {
-          parameter = this.memory[parameter]
+          parameter = this.relativeBase + parameter
         }
 
         return parameter
