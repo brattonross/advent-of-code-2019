@@ -1,4 +1,4 @@
-import { visibleAsteroids, Vector2, asteroids, angle } from '..'
+import { visibleAsteroids, Point, asteroids, bestAsteroid } from '..'
 
 test('asteroids', () => {
   const map = [
@@ -8,17 +8,17 @@ test('asteroids', () => {
     ['.', '.', '.', '.', '#'],
     ['.', '.', '.', '#', '#']
   ]
-  const expected: Vector2[] = [
-    { x: 1, y: 0 },
-    { x: 4, y: 0 },
-    { x: 0, y: 2 },
-    { x: 1, y: 2 },
-    { x: 2, y: 2 },
-    { x: 3, y: 2 },
-    { x: 4, y: 2 },
-    { x: 4, y: 3 },
-    { x: 3, y: 4 },
-    { x: 4, y: 4 }
+  const expected: Point[] = [
+    new Point(1, 0),
+    new Point(4, 0),
+    new Point(0, 2),
+    new Point(1, 2),
+    new Point(2, 2),
+    new Point(3, 2),
+    new Point(4, 2),
+    new Point(4, 3),
+    new Point(3, 4),
+    new Point(4, 4)
   ]
 
   const actual = asteroids(map)
@@ -28,25 +28,28 @@ test('asteroids', () => {
 
 test('visibleAsteroids', () => {
   const asteroids = [
-    { x: 1, y: 0 },
-    { x: 4, y: 0 },
-    { x: 0, y: 2 },
-    { x: 1, y: 2 },
-    { x: 2, y: 2 },
-    { x: 3, y: 2 },
-    { x: 4, y: 2 },
-    { x: 4, y: 3 },
-    { x: 3, y: 4 },
-    { x: 4, y: 4 }
+    new Point(1, 0),
+    new Point(4, 0),
+    new Point(0, 2),
+    new Point(1, 2),
+    new Point(2, 2),
+    new Point(3, 2),
+    new Point(4, 2),
+    new Point(4, 3),
+    new Point(3, 4),
+    new Point(4, 4)
   ]
   const cases = [
-    {
-      pos: {
-        x: 1,
-        y: 0
-      },
-      expected: 7
-    }
+    { pos: new Point(1, 0), expected: 7 },
+    { pos: new Point(4, 0), expected: 7 },
+    { pos: new Point(0, 2), expected: 6 },
+    { pos: new Point(1, 2), expected: 7 },
+    { pos: new Point(2, 2), expected: 7 },
+    { pos: new Point(3, 2), expected: 7 },
+    { pos: new Point(4, 2), expected: 5 },
+    { pos: new Point(4, 3), expected: 7 },
+    { pos: new Point(3, 4), expected: 8 },
+    { pos: new Point(4, 4), expected: 7 }
   ]
 
   for (const tc of cases) {
@@ -56,17 +59,82 @@ test('visibleAsteroids', () => {
   }
 })
 
-test('angle', () => {
+test('bestAsteroid', () => {
   const cases = [
-    { a: { x: 0, y: 1 }, b: { x: 0, y: 0 }, expected: 0 },
-    { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, expected: 90 },
-    { a: { x: 0, y: 0 }, b: { x: 0, y: 1 }, expected: 180 },
-    { a: { x: 1, y: 0 }, b: { x: 0, y: 0 }, expected: 270 },
-    { a: { x: 0, y: 0 }, b: { x: 1, y: 1 }, expected: 45 }
+    {
+      map: [
+        '......#.#.'.split(''),
+        '#..#.#....'.split(''),
+        '..#######.'.split(''),
+        '.#.#.###..'.split(''),
+        '.#..#.....'.split(''),
+        '..#....#.#'.split(''),
+        '#..#....#.'.split(''),
+        '.##.#..###'.split(''),
+        '##...#..#.'.split(''),
+        '.#....####'.split('')
+      ],
+      expected: { point: new Point(5, 8), visible: 33 }
+    },
+    {
+      map: [
+        '#.#...#.#.'.split(''),
+        '.###....#.'.split(''),
+        '.#....#...'.split(''),
+        '##.#.#.#.#'.split(''),
+        '....#.#.#.'.split(''),
+        '.##..###.#'.split(''),
+        '..#...##..'.split(''),
+        '..##....##'.split(''),
+        '......#...'.split(''),
+        '.####.###.'.split('')
+      ],
+      expected: { point: new Point(1, 2), visible: 35 }
+    },
+    {
+      map: [
+        '.#..#..###'.split(''),
+        '####.###.#'.split(''),
+        '....###.#.'.split(''),
+        '..###.##.#'.split(''),
+        '##.##.#.#.'.split(''),
+        '....###..#'.split(''),
+        '..#.#..#.#'.split(''),
+        '#..#.#.###'.split(''),
+        '.##...##.#'.split(''),
+        '.....#.#..'.split('')
+      ],
+      expected: { point: new Point(6, 3), visible: 41 }
+    },
+    {
+      map: [
+        '.#..##.###...#######'.split(''),
+        '##.############..##.'.split(''),
+        '.#.######.########.#'.split(''),
+        '.###.#######.####.#.'.split(''),
+        '#####.##.#.##.###.##'.split(''),
+        '..#####..#.#########'.split(''),
+        '####################'.split(''),
+        '#.####....###.#.#.##'.split(''),
+        '##.#################'.split(''),
+        '#####.##.###..####..'.split(''),
+        '..######..##.#######'.split(''),
+        '####.##.####...##..#'.split(''),
+        '.#####..#.######.###'.split(''),
+        '##...#.##########...'.split(''),
+        '#.##########.#######'.split(''),
+        '.####.#.###.###.#.##'.split(''),
+        '....##.##.###..#####'.split(''),
+        '.#.#.###########.###'.split(''),
+        '#.#.#.#####.####.###'.split(''),
+        '###.##.####.##.#..##'.split('')
+      ],
+      expected: { point: new Point(11, 13), visible: 210 }
+    }
   ]
 
   for (const tc of cases) {
-    const actual = angle(tc.a, tc.b)
+    const actual = bestAsteroid(tc.map)
 
     expect(actual).toEqual(tc.expected)
   }
