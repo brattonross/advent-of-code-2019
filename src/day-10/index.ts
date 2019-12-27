@@ -1,13 +1,10 @@
 import * as path from 'path'
+import Point from '../shared/Point'
 import readInput from '../shared/readInput'
 
 type Result = {
   point: Point
   visible: number
-}
-
-export class Point {
-  constructor(public x: number, public y: number) {}
 }
 
 export function bestAsteroid(map: string[][]) {
