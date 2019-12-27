@@ -22,8 +22,8 @@ function pointToString(x: number, y: number): string {
   return `${x},${y}`
 }
 
-function part1() {
-  const map = new Map<string, Color>()
+function paintHull(start: Color = Color.Black) {
+  const map = new Map<string, Color>([['0,0', start]])
   let current = { x: 0, y: 0 }
   let dir = 0
   const robot = new Computer(code, [])
@@ -57,8 +57,15 @@ function part1() {
     current.y += move.y
   }
 
+  return map
+}
+
+function part1() {
+  const map = paintHull()
   return map.size
 }
 
 const ans1 = part1()
 console.log('Part 1:', ans1)
+
+function part2() {}
