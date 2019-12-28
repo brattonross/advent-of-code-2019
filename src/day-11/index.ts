@@ -68,4 +68,30 @@ function part1() {
 const ans1 = part1()
 console.log('Part 1:', ans1)
 
-function part2() {}
+function part2() {
+  const map = paintHull(Color.White)
+
+  let h = 0
+  let w = 0
+
+  for (const key of map.keys()) {
+    const [x, y] = key.split(',').map(n => parseInt(n))
+    if (x > w) {
+      w = x
+    }
+    if (y > h) {
+      h = y
+    }
+  }
+
+  for (let x = 0; x <= w; x++) {
+    const arr: string[] = []
+    for (let y = 0; y <= h; y++) {
+      const s = map.get(pointToString(x, y)) === Color.White ? '#' : ' '
+      arr.push(s)
+    }
+    console.log(arr)
+  }
+}
+
+part2()
