@@ -66,7 +66,7 @@ export class Simulation {
   public moons: Moon[]
 
   constructor(moons: Moon[]) {
-    this.moons = [...moons]
+    this.moons = moons
   }
 
   step() {
@@ -109,4 +109,15 @@ const moons = readInput(path.resolve(__dirname, 'input.txt'))
     return new Moon(pos)
   })
 
-const simulation = new Simulation(moons)
+function part1() {
+  const simulation = new Simulation(moons)
+
+  for (let i = 0; i < 1000; i++) {
+    simulation.step()
+  }
+
+  return simulation.totalEnergy
+}
+
+const ans1 = part1()
+console.log('Part 1:', ans1)

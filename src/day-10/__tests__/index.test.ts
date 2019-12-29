@@ -1,4 +1,5 @@
-import { visibleAsteroids, Point, asteroids, bestAsteroid } from '..'
+import { visibleAsteroids, asteroids, bestAsteroid } from '..'
+import Point from '../../shared/Point'
 
 test('asteroids', () => {
   const map = [

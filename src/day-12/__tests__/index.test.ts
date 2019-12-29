@@ -1,16 +1,17 @@
 import { Moon, Vector3, Simulation } from '..'
 
 describe('Simulation', () => {
-  const moons = [
-    new Moon(new Vector3(-1, 0, 2)),
-    new Moon(new Vector3(2, -10, -7)),
-    new Moon(new Vector3(4, -8, 8)),
-    new Moon(new Vector3(3, 5, -1))
-  ]
+  let moons: Moon[] = []
+  let steps: Moon[][] = []
 
-  it('steps correctly', () => {
-    const sim = new Simulation(moons)
-    const expected = [
+  beforeEach(() => {
+    moons = [
+      new Moon(new Vector3(-1, 0, 2)),
+      new Moon(new Vector3(2, -10, -7)),
+      new Moon(new Vector3(4, -8, 8)),
+      new Moon(new Vector3(3, 5, -1))
+    ]
+    steps = [
       [
         Moon.parse('pos=<x=-1, y=  0, z= 2>, vel=<x= 0, y= 0, z= 0>'),
         Moon.parse('pos=<x= 2, y=-10, z=-7>, vel=<x= 0, y= 0, z= 0>'),
@@ -78,9 +79,13 @@ describe('Simulation', () => {
         Moon.parse('pos=<x= 2, y= 0, z= 4>, vel=<x= 1, y=-1, z=-1>')
       ]
     ]
+  })
 
-    for (let i = 0; i < expected.length; i++) {
-      expect(sim.moons).toEqual(expected[i])
+  it('steps correctly', () => {
+    const sim = new Simulation(moons)
+
+    for (let i = 0; i < steps.length; i++) {
+      expect(sim.moons).toEqual(steps[i])
       sim.step()
     }
   })
@@ -92,6 +97,7 @@ describe('Simulation', () => {
       sim.step()
     }
 
+    expect(sim.moons).toEqual(steps[10])
     expect(sim.totalEnergy).toEqual(179)
   })
 })
